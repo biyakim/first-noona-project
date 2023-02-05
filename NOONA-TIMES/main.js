@@ -1,6 +1,6 @@
 let news = [];
 let page = 1;
-let total_pages = 0;
+let total_pages = 1;
 let menus = document.querySelectorAll(".menus button")
 menus.forEach((menu)=>menu.addEventListener("click", (event)=>getNewsByTopic(event)));
 
@@ -12,7 +12,7 @@ let url;
 
 const getNews = async() => {
     try{
-        let header = new Headers({"x-api-key":"1mvqCksCoMwNP0GZCYTQRpFMDIJ1wr2CT8W8g8mIxmc",})
+        let header = new Headers({"x-api-key":"QH01zDpjrajJ4lK_0RAMObMluwM_5OmE6xlYncrZPV4",})
         url.searchParams.set('page', page); // &page=
         console.log("url은?",url)
         let response = await fetch(url,{headers:header}); //ajax, http, fetch
@@ -106,24 +106,40 @@ const pagenation = () =>{
     let first = last - 4
     //first~last 페이지 프린트
 
-    // total page 3일경우 3개의 페이지만 프린트 하는 법 alst, first
+    // total page 3일경우 3개의 페이지만 프린트 하는 법 last, first
     // << >> 이 버튼 만들어 주기 맨처음, 맨끝으로 가는 버튼 만들기
     // 내가 그룹1 일때 << < 이 버튼이 없다
     // 내가 마지막 그룹일 때 > >> 이 버튼이 없다
-
+   
     pagenationHTML = `<li class="page-item">
+    <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-5})">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>`
+    
+
+    pagenationHTML += `<li class="page-item">
     <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-1})">
       <span aria-hidden="true">&lt;</span>
     </a>
   </li> `
+    
+    
     for(let i = first;i<=last;i++){
         pagenationHTML += `<li class="page-item ${page==i?"active":""}"><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
     }
+
     pagenationHTML += `<li class="page-item">
     <a class="page-link" href="#" aria-label="Next" onclick="moveToPage(${page+1})">
       <span aria-hidden="true">&gt;</span>
     </a>
   </li>`
+
+  pagenationHTML += `<li class="page-item">
+  <a class="page-link" href="#" aria-label="Next" onclick="moveToPage(${page+5})">
+    <span aria-hidden="true">&raquo;</span>
+  </a>
+</li>`
     document.querySelector(".pagination").innerHTML = pagenationHTML;
 };
 
