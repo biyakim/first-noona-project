@@ -1,4 +1,6 @@
 let news = [];
+let page = 1;
+let total_pages = 0;
 let menus = document.querySelectorAll(".menus button")
 menus.forEach((menu)=>menu.addEventListener("click", (event)=>getNewsByTopic(event)));
 
@@ -11,16 +13,21 @@ let url;
 const getNews = async() => {
     try{
         let header = new Headers({"x-api-key":"1mvqCksCoMwNP0GZCYTQRpFMDIJ1wr2CT8W8g8mIxmc",})
-
+        url.searchParams.set('page', page); // &page=
+        console.log("url은?",url)
         let response = await fetch(url,{headers:header}); //ajax, http, fetch
         let data = await response.json();
         if(response.status == 200){
             if(data.total_hits == 0){
                 throw new Error("검색된 결과값이 없습니다.");
             }
+            console.log("받는 데이터가 뭐지?")
             news = data.articles;
+            total_page = data.total_pages
+            page = data.page;
             console.log(news);
             render();
+            pagenation();
         }else{
             throw new Error(data.message)
         }
@@ -86,5 +93,47 @@ const errorRender = (message) => {
   </div>`
     document.getElementById("news-board").innerHTML = errorHTML
 }
+
+const pagenation = () =>{
+    let pagenationHTML = ``
+    // total_page
+    // page
+    // page group
+    let pageGroup = Math.ceil(page/5)
+    // last
+    let last = pageGroup*5
+    // first
+    let first = last - 4
+    //first~last 페이지 프린트
+
+    // total page 3일경우 3개의 페이지만 프린트 하는 법 alst, first
+    // << >> 이 버튼 만들어 주기 맨처음, 맨끝으로 가는 버튼 만들기
+    // 내가 그룹1 일때 << < 이 버튼이 없다
+    // 내가 마지막 그룹일 때 > >> 이 버튼이 없다
+
+    pagenationHTML = `<li class="page-item">
+    <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-1})">
+      <span aria-hidden="true">&lt;</span>
+    </a>
+  </li> `
+    for(let i = first;i<=last;i++){
+        pagenationHTML += `<li class="page-item ${page==i?"active":""}"><a class="page-link" href="#" onclick="moveToPage(${i})">${i}</a></li>`
+    }
+    pagenationHTML += `<li class="page-item">
+    <a class="page-link" href="#" aria-label="Next" onclick="moveToPage(${page+1})">
+      <span aria-hidden="true">&gt;</span>
+    </a>
+  </li>`
+    document.querySelector(".pagination").innerHTML = pagenationHTML;
+};
+
+const moveToPage = (pageNum) => {
+    //1. 이동하고 싶은 페이지를 알아야겠지
+    page = pageNum
+    
+    //2. 이동하고 싶은 페이지를 가지고 api를 다시 호출해주자
+    getNews();
+}
+
 searchButton.addEventListener("click",getNewsByKeyword)
 getLatestNews()
