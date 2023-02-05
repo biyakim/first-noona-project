@@ -106,7 +106,6 @@ const pagenation = () =>{
     let first = last - 4
     //first~last 페이지 프린트
 
-    // total page 3일경우 3개의 페이지만 프린트 하는 법 last, first
     // << >> 이 버튼 만들어 주기 맨처음, 맨끝으로 가는 버튼 만들기
 
    
