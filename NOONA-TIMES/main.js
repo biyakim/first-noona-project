@@ -108,8 +108,7 @@ const pagenation = () =>{
 
     // total page 3일경우 3개의 페이지만 프린트 하는 법 last, first
     // << >> 이 버튼 만들어 주기 맨처음, 맨끝으로 가는 버튼 만들기
-    // 내가 그룹1 일때 << < 이 버튼이 없다
-    // 내가 마지막 그룹일 때 > >> 이 버튼이 없다
+
    
     pagenationHTML = `<li class="page-item">
     <a class="page-link" href="#" aria-label="Previous" onclick="moveToPage(${page-5})">
