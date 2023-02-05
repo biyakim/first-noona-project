@@ -9,14 +9,23 @@ let url;
 // api호출 함수를 부른다
 
 const getNews = async() => {
-    let header = new Headers({"x-api-key":"t9Yut0w6KuD8EYiSxyR0Q5OKVKoxGSg9TQITAq-U92c",})
+    try{
+        let header = new Headers({"x-api-key":"t9Yut0w6KuD8EYiSxyR0Q5OKVKoxGSg9TQITAq-U92c",})
 
-    let response = await fetch(url,{headers:header}); //ajax, http, fetch
-    let data = await response.json();
-    news = data.articles;
-    console.log(news);
-
-    render();
+        let response = await fetch(url,{headers:header}); //ajax, http, fetch
+        let data = await response.json();
+        if(response.status == 200){
+            news = data.articles;
+            console.log(news);
+            render();
+        }else{
+            throw new Error(data.message)
+        }
+    }catch(error){
+        console.log("잡힌 에러는",error.message)
+        errorRender(error.message)
+    }
+    
 }
 
 const getLatestNews = async() => {
@@ -66,6 +75,13 @@ const render = () => {
     }).join('');
 
     document.getElementById("news-board").innerHTML = newsHTML
+};
+
+const errorRender = (message) => {
+    let errorHTML = `<div class="alert alert-danger text-center" role="alert">
+    ${message}
+  </div>`
+    document.getElementById("news-board").innerHTML = errorHTML
 }
 searchButton.addEventListener("click",getNewsByKeyword)
 getLatestNews()
